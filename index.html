@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Shikho · স্টাডি সার্কেল</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --pink:#ED4C7F; --blue:#4A8BEE; --blue-600:#366BCE; --yellow:#F5B812;
+    --green:#16A34A; --green-50:#EAF7EF;
+    --red:#E4536B; --red-50:#FDEEF1;
+    --purple:#7C3AED; --purple-50:#F3EEFD;
+    --teal:#0D9488; --teal-50:#E7F6F4;
+    --ink:#1B1F2E; --muted:#6B7186; --faint:#9AA0B4;
+    --line:#ECEEF5; --bg:#F7F8FC; --card:#FFFFFF;
+    --r:16px; --r-sm:12px;
+    --shadow:0 4px 16px rgba(27,31,46,.06); --shadow-lg:0 16px 40px rgba(27,31,46,.14);
+    --font:'Plus Jakarta Sans','Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{font-family:var(--font);background:#E4E7F2;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;min-height:100vh;
+    background-image:radial-gradient(1100px 480px at 50% -10%, #EFF1FA 0%, #E4E7F2 60%);}
+  .bn{font-family:'Hind Siliguri','Noto Sans Bengali',var(--font)}
+
+  .device{width:100%;max-width:412px;height:100vh;max-height:900px;background:var(--bg);
+    position:relative;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);}
+  @media(min-width:460px){ .device{height:844px;border-radius:34px;border:10px solid #14162B;} }
+  .statusbar{height:18px;flex:0 0 auto;background:#fff}
+  .app{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+
+  .topbar{background:#fff;border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:11px;flex:0 0 auto}
+  .topbar .who{flex:1;min-width:0}
+  .topbar .who .n{font-size:14.5px;font-weight:700;letter-spacing:-.2px}
+  .topbar .who .c{font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+  .backbtn{border:none;background:none;font-size:20px;cursor:pointer;color:var(--ink);padding:4px;font-family:var(--font)}
+
+  .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex:0 0 auto;position:relative}
+  .av-22{width:22px;height:22px;font-size:9px}
+  .av-36{width:36px;height:36px;font-size:13px}
+  .av-44{width:44px;height:44px;font-size:15px}
+  .av-64{width:64px;height:64px;font-size:22px}
+
+  .screen{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:16px 16px 94px;-webkit-overflow-scrolling:touch}
+  .screen::-webkit-scrollbar{width:0}
+
+  .banner{background:linear-gradient(120deg,var(--blue),#6B9DFF);border-radius:var(--r);padding:18px 16px;color:#fff;
+    box-shadow:var(--shadow-lg);position:relative;overflow:hidden;cursor:pointer;border:none;width:100%;text-align:left;font-family:var(--font)}
+  .banner::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle,rgba(245,184,18,.5),transparent 70%)}
+  .banner .b1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+  .banner .b2{font-size:12.5px;color:#DCE7FF;margin-top:4px;font-weight:500;line-height:1.45}
+  .banner .cta{display:inline-flex;align-items:center;gap:6px;background:var(--yellow);color:#3d2f04;font-weight:800;
+    font-size:13px;padding:9px 14px;border-radius:10px;margin-top:13px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ccard{border-radius:var(--r);padding:14px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;
+    border:none;cursor:pointer;text-align:left;font-family:var(--font);gap:10px}
+  .ccard .ic{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .ccard .t{font-size:14px;font-weight:700;letter-spacing:-.2px;line-height:1.3}
+  .ccard .s{font-size:11px;font-weight:600;opacity:.7;margin-top:2px}
+  .c-green{background:var(--green-50);color:#14532D}
+  .c-red{background:var(--red-50);color:#7F1D2D}
+  .c-purple{background:var(--purple-50);color:#4C1D95}
+  .c-teal{background:var(--teal-50);color:#134E4A}
+
+  .section-h{display:flex;align-items:center;justify-content:space-between;margin:20px 4px 10px}
+  .section-h:first-child{margin-top:4px}
+  .section-h .t{font-size:15px;font-weight:700;letter-spacing:-.2px}
+  .section-h .a{font-size:12.5px;font-weight:700;color:var(--blue);cursor:pointer;background:none;border:none;font-family:var(--font)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+  .pad{padding:16px}
+
+  .btn{border:none;border-radius:var(--r-sm);font-family:var(--font);font-weight:700;font-size:14.5px;
+    padding:13px 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .05s}
+  .btn:active{transform:scale(.985)}
+  .btn-blue{background:var(--blue);color:#fff}
+  .btn-blue:active{background:var(--blue-600)}
+  .btn-yellow{background:var(--yellow);color:#3d2f04}
+  .btn-line{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-sm{padding:8px 14px;font-size:12.5px;width:auto;border-radius:10px}
+
+  .chk{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)}
+  .chk:last-child{border-bottom:none}
+  .chk .box{width:26px;height:26px;border-radius:8px;border:2px solid #C9CEDF;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:15px;cursor:pointer;flex:0 0 auto;background:#fff;transition:.12s;font-family:var(--font)}
+  .chk .box.on{background:var(--green);border-color:var(--green)}
+  .chk .m{flex:1;min-width:0}
+  .chk .m .bt{font-size:14.5px;font-weight:700}
+  .chk .m .et{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .chk .peers{display:flex}
+  .chk .peers .avatar{margin-left:-7px;border:2px solid #fff}
+  .chk .peers .avatar:first-child{margin-left:0}
+  .chk.done .bt{text-decoration:line-through;color:var(--faint)}
+
+  .frow{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line)}
+  .frow:last-child{border-bottom:none}
+  .frow .m{flex:1;min-width:0}
+  .frow .m .n{font-size:14.5px;font-weight:700}
+  .frow .m .d{font-size:12px;color:var(--muted);margin-top:1px}
+  .addbtn{border:1.5px solid var(--blue);background:#fff;color:var(--blue);font-weight:700;font-size:12.5px;
+    padding:7px 14px;border-radius:9px;cursor:pointer;flex:0 0 auto;font-family:var(--font)}
+  .addbtn.added{background:var(--blue);color:#fff}
+
+  .pbar{height:8px;border-radius:4px;background:#EDEFF7;overflow:hidden}
+  .pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#34C46A);border-radius:4px;transition:width .3s}
+
+  .nav{position:absolute;left:0;right:0;bottom:0;height:72px;background:#fff;border-top:1px solid var(--line);
+    display:flex;padding:6px 4px 10px;z-index:30}
+  .nav .n{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--faint);
+    font-size:10px;font-weight:700;cursor:pointer}
+  .nav .n.active{color:var(--blue)}
+  .nav .n svg{width:22px;height:22px}
+
+  .login{flex:1 1 auto;display:flex;flex-direction:column;padding:28px 24px 30px;background:#fff;overflow-y:auto}
+  .login h1{font-size:24px;font-weight:800;letter-spacing:-.5px;margin:26px 0 6px}
+  .login .sub{font-size:14px;color:var(--muted);line-height:1.55;margin-bottom:24px}
+  .field{width:100%;border:1.5px solid var(--line);border-radius:var(--r-sm);padding:14px;font-family:var(--font);
+    font-size:16px;font-weight:600;outline:none;letter-spacing:.5px}
+  .field:focus{border-color:var(--blue)}
+  .otp-row{display:flex;gap:10px;justify-content:space-between}
+  .otp{width:58px;height:58px;text-align:center;font-size:22px;font-weight:800;border:1.5px solid var(--line);
+    border-radius:var(--r-sm);outline:none;font-family:var(--font)}
+  .otp:focus{border-color:var(--blue)}
+  .ferr{color:var(--red);font-size:12.5px;margin-top:9px;font-weight:600}
+  .hint{font-size:12px;color:var(--faint);text-align:center;margin-top:14px;line-height:1.6}
+  .hint b{color:var(--muted)}
+  .spacer{flex:1 1 auto}
+
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--green-50);color:var(--green);
+    font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px}
+
+  .feed .fi{display:flex;gap:11px;padding:11px 2px;border-bottom:1px solid var(--line)}
+  .feed .fi:last-child{border-bottom:none}
+  .fi .tx{font-size:13px;line-height:1.45}
+  .fi .tm{font-size:11px;color:var(--faint);margin-top:2px}
+
+  .toast{position:absolute;left:16px;right:16px;bottom:86px;background:#1B1F2E;color:#fff;padding:12px 16px;border-radius:12px;
+    font-size:13px;font-weight:600;z-index:80;box-shadow:var(--shadow-lg);animation:tup .25s}
+  @keyframes tup{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+  .empty{text-align:center;padding:20px 10px}
+  .empty .em{font-size:32px;margin-bottom:6px}
+  .empty .t{font-size:14px;font-weight:700}
+  .empty .d{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.5;margin-bottom:14px}
+
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
+  .stat .v{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  .stat .l{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+  .note{font-size:12px;color:var(--faint);text-align:center;line-height:1.6;margin:16px 8px 8px}
+  .ghostbtn{background:none;border:1.5px solid var(--line);color:var(--muted);font-weight:700;font-size:13px;
+    padding:11px;border-radius:12px;width:100%;cursor:pointer;margin-top:8px;font-family:var(--font)}
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="statusbar"></div>
+  <div id="app" class="app"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- storage: window.storage (in-app) -> localStorage (standalone) -> memory ---------- */
+  var KEY="shikho_studycircle_v1";
+  var mem={};
+  var store={
+    get:async function(k){
+      try{ if(window.storage&&window.storage.get){ var r=await window.storage.get(k); return (r&&typeof r.value!=="undefined")?r.value:null; } }catch(e){}
+      try{ if(window.localStorage){ return window.localStorage.getItem(k); } }catch(e){}
+      return (k in mem)?mem[k]:null;
+    },
+    set:async function(k,v){
+      try{ if(window.storage&&window.storage.set){ await window.storage.set(k,v); return; } }catch(e){}
+      try{ if(window.localStorage){ window.localStorage.setItem(k,v); return; } }catch(e){}
+      mem[k]=v;
+    },
+    del:async function(k){
+      try{ if(window.storage&&window.storage.delete){ await window.storage.delete(k); return; } }catch(e){}
+      try{ if(window.localStorage){ window.localStorage.removeItem(k); return; } }catch(e){}
+      delete mem[k];
+    }
+  };
+
+  /* ---------- seed data ---------- */
+  var LESSONS=[
+    {id:"l1", bn:"আলো — প্রতিফলন",  en:"Physics · Ch 4 · Reflection", mins:12},
+    {id:"l2", bn:"আলো — প্রতিসরণ",  en:"Physics · Ch 4 · Refraction", mins:14},
+    {id:"l3", bn:"লেন্সের ব্যবহার",   en:"Physics · Ch 4 · Uses of Lenses", mins:10},
+    {id:"l4", bn:"অধ্যায় কুইজ",      en:"Chapter Quiz · 10 MCQ", mins:8}
+  ];
+  var FRIENDS=[
+    {id:"rafi",   name:"Rafi Ahmed",    bn:"রাফি",   done:["l1","l2"],      color:"#E4536B"},
+    {id:"nabila", name:"Nabila Rahman", bn:"নাবিলা", done:["l1"],           color:"#7C3AED"},
+    {id:"tahsin", name:"Tahsin Karim",  bn:"তাহসিন", done:[],               color:"#0D9488"},
+    {id:"sadia",  name:"Sadia Islam",   bn:"সাদিয়া", done:["l1","l2","l3"], color:"#2F6FED"},
+    {id:"arif",   name:"Arif Hossain",  bn:"আরিফ",   done:[],               color:"#D97706"},
+    {id:"mitu",   name:"Mitu Akter",    bn:"মিতু",   done:["l1"],           color:"#DB2777"}
+  ];
+  var FMAP={}; FRIENDS.forEach(function(f){ FMAP[f.id]=f; });
+
+  /* ---------- state ---------- */
+  function DEFAULT(){
+    return { session:null, friends:[], checklist:{}, trialStarted:false, createdCircle:false };
+  }
+  var state=DEFAULT();
+  var ui={ view:"login", loginStep:0, showAdd:false, autoOpened:false };
+  var phoneVal="", otpVals=["","","",""], loginErr="";
+  var toastTimer=null;
+
+  /* ---------- helpers ---------- */
+  function initials(n){ var p=String(n).trim().split(/\s+/); return (p[0][0]+(p[1]?p[1][0]:"")).toUpperCase(); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function persist(){ store.set(KEY, JSON.stringify(state)); }
+  function doneCount(){ return Object.keys(state.checklist).length; }
+
+  function birdLogo(size){
+    return '<img src="unnamed.png" alt="Shikho" width="'+size+'" height="'+size+'" style="object-fit: contain;" />';
+  }
+  function fav(f,cls){ return '<div class="avatar '+(cls||"av-36")+'" style="background:'+f.color+'">'+esc(initials(f.name))+'</div>'; }
+
+  /* ---------- boot ---------- */
+  (async function boot(){
+    var raw=await store.get(KEY);
+    if(raw){ try{ state=Object.assign(DEFAULT(), JSON.parse(raw)); }catch(e){ state=DEFAULT(); } }
+    ui.view = state.session ? "dash" : "login";
+    wire(); render();
+  })();
+
+  /* ---------- render ---------- */
+  function render(){
+    var app=document.getElementById("app");
+    if(!state.session){ app.innerHTML=renderLogin(); focusLogin(); return; }
+    var v=ui.view;
+    if(v==="login") v=ui.view="dash";
+    var body =
+      v==="dash"    ? renderDash()    :
+      v==="circle"  ? renderCircle()  :
+      v==="profile" ? renderProfile() :
+      renderStub(v);
+    app.innerHTML = body + renderNav(v);
+  }
+
+  /* ---------- LOGIN (mock OTP) ---------- */
+  function renderLogin(){
+    var head='<div style="display:flex;align-items:center;gap:10px">'+birdLogo(44)
+      + '<div style="font-weight:800;font-size:20px;letter-spacing:-.4px">Shikho <span style="color:var(--blue)">·</span> '
+      + '<span class="bn" style="color:var(--pink)">স্টাডি সার্কেল</span></div></div>';
+    if(ui.loginStep===0){
+      return '<div class="login">'+head
+        + '<h1 class="bn">তোমার ফোন নম্বর দাও</h1>'
+        + '<div class="sub bn">লগইন করতে নম্বরটা লাগবে — OTP পাঠানো হবে।</div>'
+        + '<input class="field" id="phone" type="tel" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX" value="'+esc(phoneVal)+'" aria-label="Phone number"/>'
+        + (loginErr?'<div class="ferr bn">'+esc(loginErr)+'</div>':'')
+        + '<div class="spacer"></div>'
+        + '<button class="btn btn-blue bn" data-action="send-otp">OTP পাঠাও</button>'
+        + '<div class="hint bn">ডেমো বিল্ড — আসল SMS যাবে না।</div></div>';
+    }
+    var boxes = otpVals.map(function(d,i){
+      return '<input class="otp" data-otp="'+i+'" type="tel" inputmode="numeric" maxlength="1" value="'+esc(d)+'" aria-label="OTP digit '+(i+1)+'"/>';
+    }).join("");
+    return '<div class="login">'+head
+      + '<h1 class="bn">OTP দাও</h1>'
+      + '<div class="sub bn">'+esc(phoneVal)+' নম্বরে ৪ সংখ্যার কোড পাঠানো হয়েছে।</div>'
+      + '<div class="otp-row">'+boxes+'</div>'
+      + (loginErr?'<div class="ferr bn">'+esc(loginErr)+'</div>':'')
+      + '<div class="hint"><b>Demo build:</b> any 4-digit code works — e.g. 1234. '
+      + '<span class="bn">(ডেমো: যেকোনো ৪ সংখ্যার OTP কাজ করবে)</span></div>'
+      + '<div class="spacer"></div>'
+      + '<button class="btn btn-blue bn" data-action="verify-otp">যাচাই করো</button>'
+      + '<button class="btn btn-line bn" style="margin-top:10px" data-action="change-number">নম্বর বদলাও</button></div>';
+  }
+  function focusLogin(){
+    var p=document.getElementById("phone"); if(p){ p.focus(); return; }
+    var o=document.querySelector('.otp[data-otp="0"]'); if(o&&!otpVals.join("")) o.focus();
+  }
+
+  /* ---------- DASHBOARD ---------- */
+  function renderDash(){
+    var s=state.session;
+    var top='<div class="topbar">'+birdLogo(34)
+      + '<div class="who"><div class="n">'+esc(s.name)+' <span style="color:var(--faint);font-weight:500">|</span> '+esc(s.klass || 'Class 10')
+      + ' <span style="color:var(--faint);font-weight:500">|</span> '+esc(s.group)+'</div>'
+      + '<div class="c bn">চলো, আজকের পড়া শুরু করি</div></div>'
+      + '<div class="avatar av-36" style="background:var(--pink)" data-action="view" data-view="profile">'+esc(initials(s.name))+'</div></div>';
+
+    var banner='<button class="banner" data-action="enter-circle" aria-label="StudyCircle free trial">'
+      + '<div class="b1 bn">ফ্রি-তে শিখতে ক্লিক করো</div>'
+      + '<div class="b2 bn">স্টাডি সার্কেল — বন্ধুদের সাথে ফ্রি কোর্স, একসাথে শেষ করো</div>'
+      + '<span class="cta bn">'+(state.trialStarted?"সার্কেলে ফিরে যাও →":"স্টাডি সার্কেল শুরু করো →")+'</span></button>';
+
+    var strip="";
+    if(state.friends.length>0 || doneCount()>0){
+      var avs = state.friends.slice(0,3).map(function(id,i){
+        var f=FMAP[id]; if(!f) return "";
+        return '<div class="avatar av-36" style="background:'+f.color+';margin-left:'+(i?-8:0)+'px;border:2px solid #fff">'+esc(initials(f.name))+'</div>';
+      }).join("");
+      if(!avs) avs='<div class="avatar av-36" style="background:var(--blue)">'+esc(initials(s.name))+'</div>';
+      strip='<div class="card pad" style="margin-top:12px;display:flex;align-items:center;gap:12px">'
+        + '<div style="display:flex">'+avs+'</div>'
+        + '<div style="flex:1"><div class="bn" style="font-size:13.5px;font-weight:700">'
+        + (state.friends.length>0 ? 'তোমার সার্কেলে '+state.friends.length+' জন বন্ধু' : 'সার্কেল তৈরি হয়েছে')+'</div>'
+        + '<div class="bn" style="font-size:12px;color:var(--muted)">তুমি '+doneCount()+'/'+LESSONS.length+' লেসন শেষ করেছো</div></div>'
+        + '<span class="pill bn">চালু</span></div>';
+    }
+
+    var grid='<div class="section-h"><span class="t bn">তোমার জন্য</span></div><div class="grid2">'
+      + '<button class="ccard c-green" data-action="stub-toast"><span class="ic">🎥</span><span><span class="t bn">লাইভ কোচিং</span><br/><span class="s">Live Coaching</span></span></button>'
+      + '<button class="ccard c-red" data-action="stub-toast"><span class="ic">📺</span><span><span class="t bn">অ্যানিমেটেড লেসন</span><br/><span class="s">Animated Lessons</span></span></button>'
+      + '<button class="ccard c-purple" data-action="stub-toast"><span class="ic">📝</span><span><span class="t bn">টেস্ট পেপার</span><br/><span class="s">Test Papers</span></span></button>'
+      + '<button class="ccard c-teal" data-action="stub-toast"><span class="ic">📚</span><span><span class="t bn">বোর্ড পেপার সলভিং</span><br/><span class="s">Board Paper Solving</span></span></button>'
+      + '</div>';
+
+    var why='<div class="section-h"><span class="t bn">কেন স্টাডি সার্কেল?</span></div>'
+      + '<div class="card pad"><div class="bn" style="font-size:13.5px;line-height:1.6;color:var(--muted)">'
+      + 'একা পড়া কঠিন। বন্ধু যখন লেসন শেষ করে টিক দেয়, তখন তোমারও শুরু করতে ইচ্ছা করে — সেটাই স্টাডি সার্কেল। ফ্রি কোর্স, একসাথে।</div></div>';
+
+    return top+'<div class="screen">'+banner+strip+grid+why+'</div>';
+  }
+
+  /* ---------- CIRCLE ---------- */
+  function renderCircle(){
+    var top='<div class="topbar"><button class="backbtn" data-action="view" data-view="dash" aria-label="Back">←</button>'
+      + '<div class="who"><div class="n bn">স্টাডি সার্কেল <span style="color:var(--faint);font-weight:500">·</span> ফ্রি কোর্স</div>'
+      + '<div class="c">Physics · Ch 4 · আলো (Light) — Free Trial</div></div>'
+      + '<span class="pill bn">ফ্রি</span></div>';
+
+    var pct=Math.round(doneCount()/LESSONS.length*100);
+    var prog='<div class="card pad">'
+      + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px">'
+      + '<div class="bn" style="font-size:14.5px;font-weight:700">তোমার অগ্রগতি</div>'
+      + '<div style="font-size:12.5px;font-weight:800;color:var(--green)">'+doneCount()+'/'+LESSONS.length+' · '+pct+'%</div></div>'
+      + '<div class="pbar"><i style="width:'+pct+'%"></i></div>'
+      + (doneCount()===0?'<div class="bn" style="font-size:12px;color:var(--muted);margin-top:9px">প্রথম লেসনে টিক দাও — সার্কেলের সবাই দেখবে তুমি শুরু করেছো 💪</div>':'')
+      + '</div>';
+
+    var rows=LESSONS.map(function(l){
+      var done=!!state.checklist[l.id];
+      var peers=state.friends.map(function(id){return FMAP[id];}).filter(function(f){return f&&f.done.indexOf(l.id)>=0;});
+      var pv=peers.length? '<div class="peers" title="'+esc(peers.map(function(p){return p.name;}).join(", "))+' finished">'
+        + peers.slice(0,3).map(function(p){return fav(p,"av-22");}).join("")+'</div>' : '';
+      return '<div class="chk'+(done?' done':'')+'">'
+        + '<button class="box'+(done?' on':'')+'" data-action="toggle-lesson" data-id="'+l.id+'" aria-label="'+(done?'Uncheck ':'Check ')+esc(l.en)+'">'+(done?'✓':'')+'</button>'
+        + '<div class="m"><div class="bt bn">'+esc(l.bn)+'</div><div class="et">'+esc(l.en)+' · '+l.mins+' min</div></div>'+pv+'</div>';
+    }).join("");
+    var list='<div class="section-h"><span class="t bn">শেয়ারড লেসন লিস্ট</span>'
+      + '<span style="font-size:11.5px;color:var(--faint);font-weight:600" class="bn">টিক = শেষ</span></div>'
+      + '<div class="card pad">'+rows+'</div>';
+
+    var head='<div class="section-h"><span class="t bn">তোমার সার্কেল ('+state.friends.length+')</span>'
+      + '<button class="a bn" data-action="toggle-add">'+(ui.showAdd?"বন্ধ করো":"+ বন্ধু যোগ করো")+'</button></div>';
+
+    var body="";
+    if(state.friends.length===0 && !ui.showAdd){
+      body='<div class="card pad"><div class="empty"><div class="em">👋</div>'
+        + '<div class="t bn">সার্কেল এখনো খালি</div>'
+        + '<div class="d bn">বন্ধু যোগ করো — কে কোন লেসন শেষ করলো, একসাথে দেখবে।</div>'
+        + '<div style="display:flex;gap:10px"><button class="btn btn-blue bn" data-action="toggle-add">বন্ধু যোগ করো</button>'
+        + '<button class="btn btn-line bn" data-action="create-circle">নতুন সার্কেল</button></div></div></div>';
+    } else if(ui.showAdd){
+      var frows=FRIENDS.map(function(f){
+        var added=state.friends.indexOf(f.id)>=0;
+        return '<div class="frow">'+fav(f,"av-44")
+          + '<div class="m"><div class="n">'+esc(f.name)+'</div><div class="d bn">Class 10 · '+f.done.length+' লেসন শেষ</div></div>'
+          + '<button class="addbtn bn'+(added?' added':'')+'" data-action="toggle-friend" data-id="'+f.id+'">'+(added?"যোগ হয়েছে ✓":"+ যোগ করো")+'</button></div>';
+      }).join("");
+      body='<div class="card pad"><div class="bn" style="font-size:12.5px;color:var(--muted);margin-bottom:6px">Class 10 · Science-এর ক্লাসমেট — ট্যাপ করে যোগ করো</div>'+frows+'</div>';
+  } else {
+      var mrows=state.friends.map(function(id){
+        var f=FMAP[id]; if(!f) return "";
+        return '<div class="frow">'+fav(f,"av-44")
+          + '<div class="m"><div class="n">'+esc(f.name)+'</div><div class="d bn">'+f.done.length+'/'+LESSONS.length+' লেসন · '
+          + (f.done.length>0?"এগিয়ে আছে 🔥":"এখনো শুরু করেনি")+'</div></div>'
+          + '<button class="addbtn added bn" data-action="toggle-friend" data-id="'+id+'">যোগ হয়েছে ✓</button></div>';
+      }).join("");
+      body='<div class="card pad">'+mrows+'</div>';
+    }
+
+    var feed="";
+    var items=state.friends.map(function(id){return FMAP[id];}).filter(Boolean)
+      .reduce(function(acc,f){ f.done.slice(0,2).forEach(function(lid){ var l=LESSONS.filter(function(x){return x.id===lid;})[0]; if(l) acc.push({f:f,l:l}); }); return acc; },[])
+      .slice(0,5);
+    if(items.length){
+      feed='<div class="section-h"><span class="t bn">সার্কেলে যা হচ্ছে</span></div><div class="card pad feed">'
+        + items.map(function(x,i){
+            return '<div class="fi">'+fav(x.f,"av-36")+'<div><div class="tx bn"><b>'+esc(x.f.bn)+'</b> "'+esc(x.l.bn)+'" শেষ করেছে ✓</div>'
+              + '<div class="tm bn">'+((i+1)*9)+' মিনিট আগে</div></div></div>';
+          }).join("")+'</div>';
+    }
+
+    return top+'<div class="screen">'+prog+list+head+body+feed+'</div>';
+  }
+
+  /* ---------- PROFILE ---------- */
+  function renderProfile(){
+    var s=state.session;
+    var top='<div class="topbar"><button class="backbtn" data-action="view" data-view="dash" aria-label="Back">←</button>'
+      + '<div class="who"><div class="n bn">প্রোফাইল</div><div class="c">'+esc(s.klass || 'Class 10')+' · '+esc(s.group)+'</div></div></div>';
+    var head='<div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 0 4px">'
+      + '<div class="avatar av-64" style="background:var(--pink);margin-bottom:10px">'+esc(initials(s.name))+'</div>'
+      + '<div style="font-size:20px;font-weight:800;letter-spacing:-.3px">'+esc(s.name)+'</div>'
+      + '<div style="font-size:13px;color:var(--muted);margin-top:2px">'+esc(s.phone)+'</div></div>';
+    var stats='<div class="stats">'
+      + '<div class="stat"><div class="v">'+doneCount()+'</div><div class="l bn">লেসন শেষ</div></div>'
+      + '<div class="stat"><div class="v">'+state.friends.length+'</div><div class="l bn">সার্কেল</div></div>'
+      + '<div class="stat"><div class="v bn" style="font-size:15px;line-height:1.9">'+(state.trialStarted?"চালু":"—")+'</div><div class="l bn">ফ্রি কোর্স</div></div></div>';
+    var note='<div class="note bn">তোমার সার্কেল, লেসন টিক আর সেশন — সব এই ডিভাইসে সেভ থাকে। বন্ধ করে আবার খুললেও সব থাকবে।</div>';
+    return top+'<div class="screen">'+head+stats+note
+      + '<button class="ghostbtn bn" data-action="logout">লগ আউট (ডেটা থাকবে)</button>'
+      + '<button class="ghostbtn" data-action="reset">Reset demo (clear everything)</button></div>';
+  }
+
+  /* ---------- STUBS (Coaching / Animated / Skills) ---------- */
+  function renderStub(v){
+    var map={ coaching:["🎥","লাইভ কোচিং","c-green"], animated:["📺","অ্যানিমেটেড লেসন","c-red"], skills:["⭐","স্কিলস","c-purple"] };
+    var m=map[v]||map.coaching;
+    var top='<div class="topbar">'+birdLogo(34)+'<div class="who"><div class="n bn">'+m[1]+'</div><div class="c">Shikho</div></div></div>';
+    return top+'<div class="screen"><div class="card pad"><div class="empty"><div class="em">'+m[0]+'</div>'
+      + '<div class="t bn">'+m[1]+' এই ডেমোর অংশ নয়</div>'
+      + '<div class="d bn">এই প্রোটোটাইপ স্টাডি সার্কেল v1 দেখায় — হোমের ব্যানার থেকে শুরু করো।</div>'
+      + '<button class="btn btn-blue bn" data-action="enter-circle">স্টাডি সার্কেলে যাও</button></div></div></div>';
+  }
+
+  /* ---------- NAV ---------- */
+  function renderNav(active){
+    var I={
+      home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
+      coach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/><circle cx="12" cy="11" r="2.4"/></svg>',
+      video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5Z"/></svg>',
+      skills:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.3 4.7 5.2.8-3.8 3.7.9 5.2L12 15l-4.6 2.4.9-5.2L4.5 8.5l5.2-.8Z"/></svg>',
+      me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>'
+    };
+    function item(v,label,icon){
+      return '<div class="n bn '+(active===v?"active":"")+'" data-action="view" data-view="'+v+'">'+icon+'<span>'+label+'</span></div>';
+    }
+    return '<div class="nav">'+item("dash","হোম",I.home)+item("coaching","কোচিং",I.coach)
+      + item("animated","অ্যানিমেটেড",I.video)+item("skills","স্কিলস",I.skills)+item("profile","প্রোফাইল",I.me)+'</div>';
+  }
+
+  /* ---------- toast ---------- */
+  function toast(msg){
+    var app=document.getElementById("app");
+    var old=document.getElementById("toast"); if(old) old.remove();
+    app.insertAdjacentHTML("beforeend",'<div class="toast bn" id="toast">'+msg+'</div>');
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){ var t=document.getElementById("toast"); if(t) t.remove(); },2100);
+  }
+
+  /* ---------- events ---------- */
+  function wire(){
+    var app=document.getElementById("app");
+
+    // OTP auto-advance + phone capture
+    app.addEventListener("input", function(e){
+      var t=e.target;
+      if(t.id==="phone"){ t.value=t.value.replace(/\D/g,"").slice(0,11); phoneVal=t.value; return; }
+      if(t.classList && t.classList.contains("otp")){
+        var i=+t.getAttribute("data-otp");
+        t.value=t.value.replace(/\D/g,"").slice(-1);
+        otpVals[i]=t.value;
+        if(t.value && i<3){ var nx=document.querySelector('.otp[data-otp="'+(i+1)+'"]'); if(nx) nx.focus(); }
+      }
+    });
+    app.addEventListener("keydown", function(e){
+      var t=e.target;
+      if(t.id==="phone" && e.key==="Enter"){ sendOtp(); }
+      if(t.classList && t.classList.contains("otp")){
+        var i=+t.getAttribute("data-otp");
+        if(e.key==="Backspace" && !t.value && i>0){ var pv=document.querySelector('.otp[data-otp="'+(i-1)+'"]'); if(pv) pv.focus(); }
+        if(e.key==="Enter") verifyOtp();
+      }
+    });
+
+    app.addEventListener("click", function(e){
+      var el=e.target.closest("[data-action]");
+      if(!el) return;
+      var act=el.getAttribute("data-action");
+
+      if(act==="send-otp"){ sendOtp(); return; }
+      if(act==="verify-otp"){ verifyOtp(); return; }
+      if(act==="change-number"){ ui.loginStep=0; otpVals=["","","",""]; loginErr=""; render(); return; }
+
+      if(act==="view"){ ui.view=el.getAttribute("data-view"); ui.showAdd=false; render(); return; }
+
+      if(act==="enter-circle"){
+        if(!state.trialStarted){ state.trialStarted=true; persist(); }
+        ui.view="circle";
+        if(state.friends.length===0 && !ui.autoOpened){ ui.showAdd=true; ui.autoOpened=true; }
+        render(); return;
+      }
+      if(act==="toggle-add"){ ui.showAdd=!ui.showAdd; render(); return; }
+      if(act==="create-circle"){ state.createdCircle=true; persist(); ui.showAdd=true; render(); toast("নতুন সার্কেল তৈরি হলো — এবার বন্ধু যোগ করো"); return; }
+
+      if(act==="toggle-friend"){
+        var id=el.getAttribute("data-id");
+        var has=state.friends.indexOf(id)>=0;
+        if(has){ state.friends=state.friends.filter(function(x){return x!==id;}); }
+        else { state.friends.push(id); }
+        persist(); render();
+        if(!has) toast(FMAP[id].bn+" তোমার সার্কেলে যোগ হলো 🤝");
+        return;
+      }
+
+      if(act==="toggle-lesson"){
+        var lid=el.getAttribute("data-id");
+        var first = doneCount()===0 && !state.checklist[lid];
+        if(state.checklist[lid]) delete state.checklist[lid];
+        else state.checklist[lid]=true;
+        persist(); render();
+        if(first && state.checklist[lid]) toast("প্রথম লেসন শেষ! 🎉 তোমার সার্কেল দেখছে");
+        return;
+      }
+
+      if(act==="stub-toast"){ toast("ডেমো — এই কার্ডটা v1 স্কোপের বাইরে"); return; }
+
+      if(act==="logout"){
+        state.session=null; persist();
+        ui={view:"login",loginStep:0,showAdd:false,autoOpened:false};
+        phoneVal=""; otpVals=["","","",""]; loginErr="";
+        render(); return;
+      }
+      if(act==="reset"){
+        store.del(KEY); state=DEFAULT();
+        ui={view:"login",loginStep:0,showAdd:false,autoOpened:false};
+        phoneVal=""; otpVals=["","","",""]; loginErr="";
+        render(); return;
+      }
+    });
+  }
+
+  function sendOtp(){
+    var p=document.getElementById("phone"); if(p) phoneVal=p.value;
+    if(!/^01\d{9}$/.test(phoneVal)){ loginErr="১১ সংখ্যার সঠিক নম্বর দাও (01 দিয়ে শুরু)"; render(); return; }
+    loginErr=""; ui.loginStep=1; otpVals=["","","",""]; render();
+  }
+  function verifyOtp(){
+    // read live values (covers programmatic fills too)
+    document.querySelectorAll(".otp").forEach(function(inp){ otpVals[+inp.getAttribute("data-otp")]=inp.value.replace(/\D/g,"").slice(-1); });
+    var code=otpVals.join("");
+    if(code.length!==4){ loginErr="৪ সংখ্যার OTP দাও"; render(); return; }
+    // Mock verification: ANY 4-digit code is accepted (demo build).
+    state.session={ phone:phoneVal, name:"Ahnaf", klass:"Class 10", group:"Science" };
+    persist(); loginErr=""; ui.view="dash"; render();
+  }
+
+})();
+</script>
+</body>
+</html>
