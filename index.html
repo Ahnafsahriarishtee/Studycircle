@@ -221,7 +221,15 @@
   function doneCount(){ return Object.keys(state.checklist).length; }
 
   function birdLogo(size){
-    return '<img src="unnamed.png" alt="Shikho" width="'+size+'" height="'+size+'" style="object-fit: contain;" />';
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 512 512" aria-label="Shikho">'
+      + '<g fill="none" stroke="#C4118A" stroke-width="26" stroke-linecap="round">'
+      + '<line x1="70" y1="140" x2="188" y2="258"/><line x1="58" y1="180" x2="176" y2="272"/><line x1="52" y1="222" x2="168" y2="288"/></g>'
+      + '<path d="M150 296 C150 248 196 226 250 236 L388 216 C424 250 420 322 366 362 C306 406 214 404 178 360 C160 338 150 318 150 296 Z" fill="#3B4EA6"/>'
+      + '<path d="M150 300 L116 372 L200 340 Z" fill="#C4118A"/>'
+      + '<path d="M296 236 L392 214 L356 306 Z" fill="#C4118A"/>'
+      + '<path d="M300 232 C296 186 334 158 372 166 C408 174 414 214 392 232 L356 250 Z" fill="#F5B012"/>'
+      + '<path d="M394 198 L452 166 L410 234 Z" fill="#3B4EA6"/>'
+      + '<circle cx="366" cy="196" r="8" fill="#fff"/></svg>';
   }
   function fav(f,cls){ return '<div class="avatar '+(cls||"av-36")+'" style="background:'+f.color+'">'+esc(initials(f.name))+'</div>'; }
 
