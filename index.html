@@ -169,6 +169,7 @@
 
   /* ---------- storage: window.storage (in-app) -> localStorage (standalone) -> memory ---------- */
   var KEY="shikho_studycircle_v1";
+  var AUTHKEY="shikho_studycircle_auth_v1";
   var mem={};
   var store={
     get:async function(k){
@@ -217,7 +218,23 @@
   /* ---------- helpers ---------- */
   function initials(n){ var p=String(n).trim().split(/\s+/); return (p[0][0]+(p[1]?p[1][0]:"")).toUpperCase(); }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-  function persist(){ store.set(KEY, JSON.stringify(state)); }
+  function dataKey(phone){ return KEY + "::" + (phone || (state.session && state.session.phone) || "anon"); }
+  function sliceOf(){ return { friends:state.friends, checklist:state.checklist, trialStarted:state.trialStarted, createdCircle:state.createdCircle }; }
+  function applySlice(sl){
+    state.friends      = (sl && sl.friends) ? sl.friends : [];
+    state.checklist    = (sl && sl.checklist) ? sl.checklist : {};
+    state.trialStarted = !!(sl && sl.trialStarted);
+    state.createdCircle= !!(sl && sl.createdCircle);
+  }
+  async function loadData(phone){
+    var raw=await store.get(dataKey(phone));
+    if(!raw) return null;
+    try{ return JSON.parse(raw); }catch(e){ return null; }
+  }
+  function saveData(){ if(state.session){ store.set(dataKey(), JSON.stringify(sliceOf())); } }
+  function saveAuth(){ if(state.session){ store.set(AUTHKEY, JSON.stringify(state.session)); } else { store.del(AUTHKEY); } }
+  // persist = remember who is logged in (this device) + save THAT number's circle
+  function persist(){ saveAuth(); saveData(); }
   function doneCount(){ return Object.keys(state.checklist).length; }
 
   function birdLogo(size){
@@ -235,8 +252,11 @@
 
   /* ---------- boot ---------- */
   (async function boot(){
-    var raw=await store.get(KEY);
-    if(raw){ try{ state=Object.assign(DEFAULT(), JSON.parse(raw)); }catch(e){ state=DEFAULT(); } }
+    var auth=await store.get(AUTHKEY);
+    if(auth){
+      try{ state.session=JSON.parse(auth); }catch(e){ state.session=null; }
+      if(state.session){ applySlice(await loadData(state.session.phone)); }
+    }
     ui.view = state.session ? "dash" : "login";
     wire(); render();
   })();
@@ -268,7 +288,7 @@
         + (loginErr?'<div class="ferr bn">'+esc(loginErr)+'</div>':'')
         + '<div class="spacer"></div>'
         + '<button class="btn btn-blue bn" data-action="send-otp">OTP পাঠাও</button>'
-        + '<div class="hint bn">ডেমো বিল্ড — আসল SMS যাবে না।</div></div>';
+        + '<div class="hint bn">ডেমো বিল্ড — আসল SMS যাবে না। প্রতিটি নম্বরের নিজের সার্কেল এই ডিভাইসে আলাদাভাবে সেভ থাকে।</div></div>';
     }
     var boxes = otpVals.map(function(d,i){
       return '<input class="otp" data-otp="'+i+'" type="tel" inputmode="numeric" maxlength="1" value="'+esc(d)+'" aria-label="OTP digit '+(i+1)+'"/>';
@@ -528,13 +548,16 @@
       if(act==="stub-toast"){ toast("ডেমো — এই কার্ডটা v1 স্কোপের বাইরে"); return; }
 
       if(act==="logout"){
-        state.session=null; persist();
+        saveData();                 // keep this number's circle saved under its own key
+        store.del(AUTHKEY);         // forget who is logged in on this device
+        state=DEFAULT();            // clear in-memory so next login starts from its own slice
         ui={view:"login",loginStep:0,showAdd:false,autoOpened:false};
         phoneVal=""; otpVals=["","","",""]; loginErr="";
         render(); return;
       }
       if(act==="reset"){
-        store.del(KEY); state=DEFAULT();
+        if(state.session){ store.del(dataKey()); }
+        store.del(AUTHKEY); state=DEFAULT();
         ui={view:"login",loginStep:0,showAdd:false,autoOpened:false};
         phoneVal=""; otpVals=["","","",""]; loginErr="";
         render(); return;
@@ -547,13 +570,15 @@
     if(!/^01\d{9}$/.test(phoneVal)){ loginErr="১১ সংখ্যার সঠিক নম্বর দাও (01 দিয়ে শুরু)"; render(); return; }
     loginErr=""; ui.loginStep=1; otpVals=["","","",""]; render();
   }
-  function verifyOtp(){
+  async function verifyOtp(){
     // read live values (covers programmatic fills too)
     document.querySelectorAll(".otp").forEach(function(inp){ otpVals[+inp.getAttribute("data-otp")]=inp.value.replace(/\D/g,"").slice(-1); });
     var code=otpVals.join("");
     if(code.length!==4){ loginErr="৪ সংখ্যার OTP দাও"; render(); return; }
     // Mock verification: ANY 4-digit code is accepted (demo build).
     state.session={ phone:phoneVal, name:"Ahnaf", klass:"Class 10", group:"Science" };
+    applySlice(await loadData(phoneVal));   // returning number -> its saved circle; new number -> empty
+    ui.autoOpened=false;                    // empty circle will auto-open the add-friends panel
     persist(); loginErr=""; ui.view="dash"; render();
   }
 
