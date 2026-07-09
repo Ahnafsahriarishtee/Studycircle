@@ -1,4 +1,4 @@
-[# StudyCircle v1 — Shikho take-home (SOC-0312)
+**StudyCircle v1**
 
 A working v1 of **StudyCircle**: a social layer wired directly onto the Free-Trial path, built to attack Shikho's biggest leak — **activation** (students who register but never start a first content session). Mock OTP login → Shikho-styled dashboard → a free-trial study group with a **persistent friend circle** and a **shared lesson checklist**, where seeing a classmate check off Lesson 1 is the pressure that gets you to start yours.
 
@@ -42,4 +42,4 @@ Full reasoning in **`PLAN.md`**. In brief:
 
 ## Build trace
 
-The GitHub commit history is the build trace — each commit maps to a real stage (scaffold → login → dashboard → circle → persistence → logo/brand fixes → per-number state).](https://studycircle-ahnafsahriar.vercel.app/)
+The GitHub commit history is the build trace — each commit maps to a real stage (scaffold → login → dashboard → circle → persistence → logo/brand fixes → per-number state). (https://studycircle-ahnafsahriar.vercel.app/)
